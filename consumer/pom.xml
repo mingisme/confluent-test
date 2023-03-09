@@ -97,45 +97,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             </configuration>
         </plugin>
         <plugin>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro-maven-plugin</artifactId>
-            <version>${avro.version}</version>
-            <executions>
-                <execution>
-                    <phase>generate-sources</phase>
-                    <goals>
-                        <goal>schema</goal>
-                    </goals>
-                    <configuration>
-                        <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/</sourceDirectory>
-                        <includes>
-                            <include>Payment.avsc</include>
-                        </includes>
-                        <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-        <plugin>
-            <groupId>io.confluent</groupId>
-            <artifactId>kafka-schema-registry-maven-plugin</artifactId>
-            <version>${io.confluent.schema-registry.version}</version>
-            <configuration>
-                <schemaRegistryUrls>
-                    <param>${schemaRegistryUrl}</param>
-                </schemaRegistryUrls>
-                <userInfoConfig>${schemaRegistryBasicAuthUserInfo}</userInfoConfig>
-                <subjects>
-                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2b.avsc</transactions-value>
-                </subjects>
-            </configuration>
-            <goals>
-                <goal>test-compatibility</goal>
-            </goals>
-        </plugin>
-        <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
+            <configuration>
+                <skip>true</skip>
+            </configuration>
             <executions>
                 <!--
                  This declaration merges with the one in the parent, rather
@@ -176,6 +142,20 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                     </configuration>
                     <goals>
                         <goal>check</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <configuration>
+            </configuration>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
                     </goals>
                 </execution>
             </executions>

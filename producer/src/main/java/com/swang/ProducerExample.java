@@ -10,11 +10,7 @@ import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 public class ProducerExample {
@@ -24,23 +20,31 @@ public class ProducerExample {
     private static String configFile;
 
     @SuppressWarnings("InfiniteLoopStatement")
-    public static void main(final String[] args) throws IOException {
+    public static void main(String[] args) {
+        if (args.length < 2) {
+            args = new String[]{"localhost:9092", "http://localhost:8081"};
+        }
 
-        //Non TLS
-//          props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        String kafkaServer = args[0];
+        String schemaRegistry = args[1];
 
-        //TLS
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9093");
-        props.put("security.protocol", "SSL");
-        props.put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "");
-        props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, "/Users/ming.wang4/RD/confluent/ssl-ca/keystore-client/kafka.keystore.jks");
-        props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, "test12345");
-        props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, "/Users/ming.wang4/RD/confluent/ssl-ca/keystore-client/kafka.keystore.jks");
-        props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, "test12345");
-        props.put(SslConfigs.SSL_KEY_PASSWORD_CONFIG, "test12345");
+        if (args.length == 2) {
+            //Non TLS
+            props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
+        } else {
+            //TLS
+            props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
+            props.put("security.protocol", "SSL");
+            props.put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "");
+            props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, "./kafka.keystore.jks");
+            props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, "test12345");
+            props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, "./kafka.keystore.jks");
+            props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, "test12345");
+            props.put(SslConfigs.SSL_KEY_PASSWORD_CONFIG, "test12345");
+        }
 
         //Avro registry
-        props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
+        props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistry);
 
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.RETRIES_CONFIG, 0);
