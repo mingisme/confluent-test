@@ -13,3 +13,4 @@ https://docs.confluent.io/platform/current/schema-registry/schema_registry_onpre
 ## Certificate and JKS generator
 https://github.com/confluentinc/confluent-platform-security-tools/blob/master/kafka-generate-ssl.sh
 
+-------------------

@@ -10,7 +10,6 @@ import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-import java.io.IOException;
 import java.util.Properties;
 
 public class ProducerExample {
