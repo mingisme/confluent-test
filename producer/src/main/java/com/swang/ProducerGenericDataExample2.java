@@ -89,9 +89,18 @@ public class ProducerGenericDataExample2 {
 
             for (long i = 0; i < 10; i++) {
 
-                String transactionAsString = "{\"id\": \"id" + i + "\", \"amount\": 1000.0}";
+                String jsonDocument = "{\"id\": \"id" + i + "\", \"amount\": 1000.0}";
                 GenericRecord data = null;
-                //generate GenericRecord with schema and transactionAsString
+                //generate GenericRecord with schema and jsonDocument
+                try {
+                    DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+                    Decoder decoder = DecoderFactory.get().jsonDecoder(schema, jsonDocument);
+                    data = datumReader.read(null, decoder);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    System.out.println("Error when generate GenericRecord");
+                    continue;
+                }
 
                 final ProducerRecord<String, GenericRecord> record = new ProducerRecord<>(TOPIC, data.get("id").toString(), data);
                 producer.send(record);
