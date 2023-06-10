@@ -53,6 +53,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 </pluginRepositories>
 
 <dependencies>
+<!--    <dependency>-->
+<!--        <groupId>org.apache.avro</groupId>-->
+<!--        <artifactId>avro</artifactId>-->
+<!--        <version>1.11.1</version>-->
+<!--    </dependency>-->
     <!-- Add the Kafka dependencies -->
     <dependency>
         <groupId>io.confluent</groupId>

@@ -27,3 +27,4 @@ target
 .DS_Store
 dependency-reduced-pom.xml
 *.jks
+*.pfx

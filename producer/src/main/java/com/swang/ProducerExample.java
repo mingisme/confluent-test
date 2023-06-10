@@ -34,10 +34,11 @@ public class ProducerExample {
             //TLS
             props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
             props.put("security.protocol", "SSL");
+            props.put("ssl.keystore.type", "pkcs12");
             props.put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "");
-            props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, "./kafka.keystore.jks");
+            props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, "./kafka.keystore.pfx");
             props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, "test12345");
-            props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, "./kafka.keystore.jks");
+            props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, "./kafka.keystore.pfx");
             props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, "test12345");
             props.put(SslConfigs.SSL_KEY_PASSWORD_CONFIG, "test12345");
         }
