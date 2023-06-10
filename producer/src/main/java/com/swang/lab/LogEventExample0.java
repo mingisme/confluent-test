@@ -13,11 +13,12 @@ import java.io.IOException;
 public class LogEventExample0 {
     public static void main(String[] args) throws IOException {
         String json = "{\n" +
+                "  \"dt\": 1623165600,\n" +
                 "  \"timestamp\": 1623165600,\n" +
                 "  \"source\": {\n" +
                 "    \"name\": \"MyApplication\",\n" +
-                "    \"version\": \"1.0.0\",\n" +
-                "    \"owner\": \"John Doe\"\n" +
+                "    \"version\": null,\n" +
+                "    \"owner\": {\"string\":\"John Doe\"}\n" +
                 "  },\n" +
                 "  \"context\": {\n" +
                 "    \"key1\": \"value1\",\n" +
