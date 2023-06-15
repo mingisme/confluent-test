@@ -6,11 +6,16 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class ProducerExample {
 
@@ -18,7 +23,6 @@ public class ProducerExample {
     private static final Properties props = new Properties();
     private static String configFile;
 
-    @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) {
         if (args.length < 2) {
             args = new String[]{"localhost:9092", "http://localhost:8081"};
@@ -57,7 +61,13 @@ public class ProducerExample {
                 final String orderId = "id" + Long.toString(i);
                 final Payment payment = new Payment(orderId, 1000.00d);
                 final ProducerRecord<String, Payment> record = new ProducerRecord<String, Payment>(TOPIC, payment.getId().toString(), payment);
-                producer.send(record);
+                Future<RecordMetadata> send = producer.send(record);
+                try {
+                    RecordMetadata recordMetadata = send.get(5, TimeUnit.SECONDS);
+                    System.out.println("ACK, timestamp:"+recordMetadata.timestamp()+", topic:" + recordMetadata.topic() + ", offset:" + recordMetadata.offset() + ", partition:" + recordMetadata.partition());
+                } catch (ExecutionException | TimeoutException e) {
+                    throw new RuntimeException(e);
+                }
                 System.out.printf("Successfully produce 1 message to topic called %s%n", TOPIC);
                 Thread.sleep(1000L);
             }
@@ -65,9 +75,7 @@ public class ProducerExample {
             producer.flush();
             System.out.printf("Successfully produced 10 messages to a topic called %s%n", TOPIC);
 
-        } catch (final SerializationException e) {
-            e.printStackTrace();
-        } catch (final InterruptedException e) {
+        } catch (final SerializationException | InterruptedException e) {
             e.printStackTrace();
         }
 
